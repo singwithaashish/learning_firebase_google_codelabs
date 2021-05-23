@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart'; // new
 import 'package:firebase_auth/firebase_auth.dart'; // new
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gtk_flutter/screens/login_screen.dart';
 import 'package:provider/provider.dart'; // new
 
 import 'src/authentication.dart'; // new
@@ -11,30 +12,35 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // new
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ApplicationState(),
-      builder: (context, _) => App(),
-    ),
-  );
+      // ChangeNotifierProvider(
+      //   create: (context) => ApplicationState(),
+      //   builder: (context, _) => LoginScreen(),
+      // ),
+      App());
 }
 
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Firebase Meetup',
-      theme: ThemeData(
-        buttonTheme: Theme.of(context).buttonTheme.copyWith(
-              highlightColor: Colors.deepPurple,
-            ),
-        primarySwatch: Colors.deepPurple,
-        textTheme: GoogleFonts.robotoTextTheme(
-          Theme.of(context).textTheme,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: ApplicationState()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Firebase Meetup',
+        theme: ThemeData(
+          buttonTheme: Theme.of(context).buttonTheme.copyWith(
+                highlightColor: Colors.deepPurple,
+              ),
+          primarySwatch: Colors.deepPurple,
+          textTheme: GoogleFonts.robotoTextTheme(
+            Theme.of(context).textTheme,
+          ),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        home: HomePage(),
       ),
-      home: HomePage(),
     );
   }
 }
@@ -56,6 +62,7 @@ class HomePage extends StatelessWidget {
           IconAndDetail(Icons.location_city, 'San Francisco'),
           Consumer<ApplicationState>(
             builder: (context, appState, _) => Authentication(
+              //returns an authentication widget which has switch case in it
               email: appState.email,
               loginState: appState.loginState,
               startLoginFlow: appState.startLoginFlow,
@@ -105,6 +112,7 @@ enum Attending { yes, no, unknown }
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
+    // doing this maybe calls the function first
     init();
   }
 
@@ -313,7 +321,7 @@ class _GuestBookState extends State<GuestBook> {
                 style: TextStyle(color: Colors.grey, fontSize: 15),
               ),
               Container(
-                width: 250,
+                width: 200,
                 child: Text(
                   '${message.message} ',
                   style: TextStyle(color: Colors.green),
