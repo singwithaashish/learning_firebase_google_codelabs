@@ -11,6 +11,7 @@ enum ApplicationLoginState {
 }
 
 class Authentication extends StatelessWidget {
+  // this actually is authentication ui
   const Authentication({
     required this.loginState,
     required this.email,
